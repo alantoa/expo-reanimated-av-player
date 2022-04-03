@@ -1,0 +1,22 @@
+{
+  "name": "expo-av-player-example",
+  "displayName": "ExpoAvPlayer Example",
+  "expo": {
+    "name": "expo-av-player-example",
+    "slug": "expo-av-player-example",
+    "description": "Example app for expo-av-player",
+    "privacy": "public",
+    "version": "1.0.0",
+    "platforms": [
+      "ios",
+      "android",
+      "web"
+    ],
+    "ios": {
+      "supportsTablet": true
+    },
+    "assetBundlePatterns": [
+      "**/*"
+    ]
+  }
+}
