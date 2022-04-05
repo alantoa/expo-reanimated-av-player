@@ -1,6 +1,6 @@
 {
   "name": "expo-reanimated-av-player",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "▶️ A high-performance, interactive and customizable video player control, built upon Reanimated v2 & GestureHandler v2.",
   "main": "lib/commonjs/index",
   "module": "lib/module/index",
