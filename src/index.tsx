@@ -33,7 +33,7 @@ import Animated, {
   withTiming,
 } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { AVPlaybackStatus, Video, VideoProps } from 'expo-av/src/';
+import { AVPlaybackStatus, Video, VideoProps } from 'expo-av';
 import { Text } from './components';
 import { Ripple } from './components/ripple';
 import { TapControler } from './components/index';
@@ -157,9 +157,8 @@ const ExpoAvPlayer = forwardRef<ExpoAvPlayerRef, ExpoAvPlayerProps>(
      */
 
     const insets = useSafeAreaInsets();
-    const insetsRef = useRef(insets);
     const dimensions = useWindowDimensions();
-    const fullWidth = height - insetsRef.current.left - insetsRef.current.right;
+
     const leftDoubleTapBoundary =
       dimensions.width / 2 - insets.left - insets.right - 80;
 
@@ -226,7 +225,9 @@ const ExpoAvPlayer = forwardRef<ExpoAvPlayerRef, ExpoAvPlayerProps>(
     const min = useSharedValue(0);
     const isScrubbing = useSharedValue(false);
     const progress = useSharedValue(0);
+
     const defaultVideoStyle = useAnimatedStyle(() => {
+      const fullVideoHeight = height - insets.left - insets.right;
       return {
         transform: [
           {
@@ -237,11 +238,11 @@ const ExpoAvPlayer = forwardRef<ExpoAvPlayerRef, ExpoAvPlayerProps>(
           },
         ],
         height: videoHeight.value,
-        width: withTiming(isFullScreen.value ? fullWidth : width, {
+        width: withTiming(isFullScreen.value ? fullVideoHeight : width, {
           duration: 60,
         }),
       };
-    }, [videoHeight, videoScale, videoTransY]);
+    }, [videoHeight, videoScale, videoTransY, insets]);
     const videoStyle = customAnimationStyle
       ? customAnimationStyle
       : defaultVideoStyle;
@@ -444,7 +445,7 @@ const ExpoAvPlayer = forwardRef<ExpoAvPlayerRef, ExpoAvPlayerProps>(
       const orientation = await ScreenOrientation.getOrientationLockAsync();
       if (
         isFullScreen.value ||
-        orientation !== ScreenOrientation.OrientationLock.PORTRAIT
+        orientation !== ScreenOrientation.OrientationLock.PORTRAIT_UP
       ) {
         exitFullScreen();
         StatusBar.setHidden(false, 'fade');
@@ -461,7 +462,6 @@ const ExpoAvPlayer = forwardRef<ExpoAvPlayerRef, ExpoAvPlayerProps>(
       if (!status) {
         return;
       }
-
       runOnJS(toggleFullScreenOnJS)();
     };
 
@@ -536,13 +536,6 @@ const ExpoAvPlayer = forwardRef<ExpoAvPlayerRef, ExpoAvPlayerProps>(
           if (numberOfPointers !== 1) {
             return;
           }
-          if (!doubleTapIsAlive.value) {
-            resetControlTimeout();
-            if (controlViewOpacity.value === 0) {
-              showControlAnimation();
-              return;
-            }
-          }
 
           if (x < leftDoubleTapBoundary) {
             doubleLeftOpacity.value = 1;
@@ -591,7 +584,7 @@ const ExpoAvPlayer = forwardRef<ExpoAvPlayerRef, ExpoAvPlayerProps>(
       const orientation = await ScreenOrientation.getOrientationLockAsync();
       if (
         isFullScreen.value ||
-        orientation !== ScreenOrientation.OrientationLock.PORTRAIT
+        orientation !== ScreenOrientation.OrientationLock.PORTRAIT_UP
       ) {
         setIsFullscreen(false);
         exitFullScreen();
@@ -953,11 +946,7 @@ const ExpoAvPlayer = forwardRef<ExpoAvPlayerRef, ExpoAvPlayerProps>(
                   <Animated.View
                     style={[
                       {
-                        width:
-                          height -
-                          insetsRef.current.top -
-                          insetsRef.current.bottom -
-                          40,
+                        width: height - 40,
                       },
                       fullScreenSliderStyle,
                     ]}
