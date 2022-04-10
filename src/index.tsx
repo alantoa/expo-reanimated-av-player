@@ -68,15 +68,9 @@ export type ExpoAvPlayerProps = VideoProps & {
   doubleTapInterval?: number;
   theme?: SliderThemeType;
   onTapPause?: (paused: boolean) => void;
-  sliderProps?: Pick<
+  sliderProps?: Omit<
     AwesomeSliderProps,
-    | 'renderBubble'
-    | 'bubble'
-    | 'bubbleMaxWidth'
-    | 'bubbleWidth'
-    | 'bubbleTranslateY'
-    | 'disable'
-    | 'panHitSlop'
+    'progress' | 'minimumValue' | 'maximumValue'
   >;
   videoHeight: Animated.SharedValue<number>;
   customAnimationStyle?: Animated.AnimateStyle<ViewStyle>;
@@ -427,7 +421,6 @@ const ExpoAvPlayer = forwardRef<ExpoAvPlayerRef, ExpoAvPlayerProps>(
       ScreenOrientation.lockAsync(
         ScreenOrientation.OrientationLock.LANDSCAPE_RIGHT
       );
-      // Orientation.lockToLandscape();
       isFullScreen.value = true;
       videoHeight.value = width;
     };
@@ -755,7 +748,6 @@ const ExpoAvPlayer = forwardRef<ExpoAvPlayerRef, ExpoAvPlayerProps>(
         <GestureDetector gesture={gesture}>
           <Animated.View style={[styles.container, videoStyle, style]}>
             <Video
-              {...rest}
               ref={videoPlayer}
               resizeMode={resizeMode}
               onLoadStart={onLoadStart}
@@ -765,6 +757,7 @@ const ExpoAvPlayer = forwardRef<ExpoAvPlayerRef, ExpoAvPlayerProps>(
               shouldPlay={!paused}
               onPlaybackStatusUpdate={onPlaybackStatusUpdate}
               progressUpdateIntervalMillis={1000}
+              {...rest}
             />
             <VideoLoader loading={loading} />
             <Animated.View style={StyleSheet.absoluteFillObject}>
@@ -1106,6 +1099,10 @@ const styles = StyleSheet.create({
   },
   container: {
     backgroundColor: palette.B(1),
+    alignItems: 'center',
+    elevation: 10,
+    justifyContent: 'center',
+    zIndex: 10,
   },
 });
 
