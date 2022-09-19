@@ -27,6 +27,7 @@ First you have to follow installation instructions of:
 - [expo-screen-orientation](https://docs.expo.dev/versions/latest/sdk/screen-orientation/)
 - [react-native-safe-area-context](https://github.com/th3rdwave/react-native-safe-area-context)
 - [expo-av](https://docs.expo.dev/versions/latest/sdk/av/)
+- [lottie-react-native](https://github.com/lottie-react-native/lottie-react-native)
 
 ```sh
 yarn add expo-reanimated-av-player
